@@ -7,6 +7,8 @@ class ReelsIdle extends ReelsState {}
 class ReelsLoading extends ReelsState {}
 
 class ReelsSuccess extends ReelsState {}
+class ReelsLoadingMore extends ReelsState {}
+class AddVideoLoading extends ReelsState {}
 class AddVideoSuccess extends ReelsState {}
 class OpenCloseVideoSuccess extends ReelsState {}
 

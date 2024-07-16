@@ -8,9 +8,13 @@ class ReelsDataSource {
 
   ReelsDataSource(this.baseDioHelper);
 
-  Future getReals() async {
+  Future getReals(int page, int perPage) async {
     final Response response = await baseDioHelper.get(
       endPoint: EndPoints.reels,
+      query: {
+        'page': page,
+        'per_page': perPage,
+      }
     );
     return response.data['data'];
   }
