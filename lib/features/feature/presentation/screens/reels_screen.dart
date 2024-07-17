@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:task/features/feature/cubit/reels_cubit.dart';
-import 'package:task/features/feature/data/models/video_model.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../../../core/src/app_export.dart';
 
 class ReelsScreen extends StatefulWidget {
-  const ReelsScreen({super.key, required this.videoList});
-  final List<VideoModel> videoList;
+  const ReelsScreen({super.key,});
 
   @override
   State<ReelsScreen> createState() => _ReelsScreenState();
