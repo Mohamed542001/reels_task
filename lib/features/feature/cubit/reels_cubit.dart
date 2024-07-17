@@ -27,9 +27,11 @@ class ReelsBloc extends Cubit<ReelsState> {
           await _reelsRepository.getReals(startIndex, pageSize);
       if (data is Succeed<ReelsResponseModel>) {
         reelsList.addAll(data.data.data ?? []);
-        var total = data.data.meta?.total!;
         for (var item in reelsList.skip(videoControllers.length)) {
-          final controller = VideoPlayerController.networkUrl(Uri.parse(item.video ?? ''));
+          final controller = VideoPlayerController.networkUrl(
+              Uri.parse(item.video ?? ''),
+            videoPlayerOptions: VideoPlayerOptions()
+          );
           await controller.initialize();
           videoControllers.add(controller);
         }

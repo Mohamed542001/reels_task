@@ -43,64 +43,48 @@ class _ReelsScreenState extends State<ReelsScreen> {
                 color: AppColors.white,
               ));
             } else {
-              return Stack(
+              return Column(
                 children: [
-                  Column(
-                    children: [
-                      Expanded(
-                        // height: 250,
-                        child: PageView.builder(
-                          controller: cubit.pageController,
-                          scrollDirection: Axis.vertical,
-                          itemCount: cubit.videoControllers.length,
-                          physics: const BouncingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            final controller = cubit.videoControllers[index];
-                            return controller.value.isInitialized
-                                ? GestureDetector(
-                                onTap: () {
-                                  cubit.openCloseVideo(controller);
-                                },
-                                child: VideoPlayer(controller))
-                                : const Center(
-                                child: CupertinoActivityIndicator());
-                          },
-                          onPageChanged: (index) {
-                            for (var controller in cubit.videoControllers) {
-                              controller.pause();
-                            }
-                            cubit.videoControllers[index].play();
-                            if (index == cubit.videoControllers.length - 1) {
-                              cubit.loadMoreVideos();
-                            }
-                          },
-                        ),
-                      ),
-                      if ((state is ReelsLoadingMore)||(cubit.videoControllers.length!=cubit.reelsList.length))...[
-                        SizedBox(
-                          height: 5.h,
-                        ),
-                        const CupertinoActivityIndicator(
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          height: 5.h,
-                        ),
-                      ]
-                    ],
+                  Expanded(
+                    // height: 250,
+                    child: PageView.builder(
+                      controller: cubit.pageController,
+                      scrollDirection: Axis.vertical,
+                      itemCount: cubit.videoControllers.length,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final controller = cubit.videoControllers[index];
+                        return controller.value.isInitialized
+                            ? GestureDetector(
+                            onTap: () {
+                              cubit.openCloseVideo(controller);
+                            },
+                            child: VideoPlayer(controller))
+                            : const Center(
+                            child: CupertinoActivityIndicator());
+                      },
+                      onPageChanged: (index) {
+                        for (var controller in cubit.videoControllers) {
+                          controller.pause();
+                        }
+                        cubit.videoControllers[index].play();
+                        if (index == cubit.videoControllers.length - 1) {
+                          cubit.loadMoreVideos();
+                        }
+                      },
+                    ),
                   ),
-                  Column(
-                    children: [
-                      Text(
-                        cubit.videoControllers.length.toString(),
-                        style: AppTextStyles.textStyle(color: Colors.white),
-                      ),
-                      Text(
-                        cubit.reelsList.length.toString(),
-                        style: AppTextStyles.textStyle(color: Colors.white),
-                      )
-                    ],
-                  ),
+                  if ((state is ReelsLoadingMore)||(cubit.videoControllers.length!=cubit.reelsList.length))...[
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    const CupertinoActivityIndicator(
+                      color: Colors.white,
+                    ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                  ]
                 ],
               );
             }
