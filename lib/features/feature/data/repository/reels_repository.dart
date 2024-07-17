@@ -9,11 +9,10 @@ class ReelsRepository {
   ReelsRepository(this._reelsDataSource);
 
 
-  Future<NetworkService<List<RealModel>>> getReals(int page, int perPage) async {
+  Future<NetworkService<ReelsResponseModel>> getReals(int page, int perPage) async {
     try {
-      List<dynamic> response = await _reelsDataSource.getReals(page,perPage);
-      List<RealModel> reelsData =
-      response.map((data) => RealModel.fromJson(data)).toList();
+      var response = await _reelsDataSource.getReals(page,perPage);
+      ReelsResponseModel reelsData = ReelsResponseModel.fromJson(response);
       print("success");
       return NetworkService.succeed(reelsData);
     } catch (error) {

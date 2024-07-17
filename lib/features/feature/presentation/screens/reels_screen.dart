@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:task/features/feature/cubit/reels_cubit.dart';
 import 'package:task/features/feature/data/models/video_model.dart';
 import 'package:video_player/video_player.dart';
@@ -19,7 +20,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
   void initState() {
     super.initState();
     cubit = ReelsBloc.get(context);
-    cubit.loadMoreVideos();
+    cubit.getReels(1);
   }
 
   @override
@@ -27,8 +28,8 @@ class _ReelsScreenState extends State<ReelsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Video PageView',
-          style: AppTextStyles.textStyle(color: Colors.white, size: 20),
+          'Reels App',
+          style: AppTextStyles.textStyle(color: Colors.white, size: 24),
         ),
         centerTitle: true,
         backgroundColor: Colors.black,
@@ -40,7 +41,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
           builder: (context, state) {
             if (cubit.videoControllers.isEmpty) {
               return const Center(
-                  child: CircularProgressIndicator(
+                  child: CupertinoActivityIndicator(
                 color: AppColors.white,
               ));
             } else {
@@ -54,6 +55,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
                           controller: cubit.pageController,
                           scrollDirection: Axis.vertical,
                           itemCount: cubit.videoControllers.length,
+                          physics: const BouncingScrollPhysics(),
                           itemBuilder: (context, index) {
                             final controller = cubit.videoControllers[index];
                             return controller.value.isInitialized
@@ -63,7 +65,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
                                 },
                                 child: VideoPlayer(controller))
                                 : const Center(
-                                child: CircularProgressIndicator());
+                                child: CupertinoActivityIndicator());
                           },
                           onPageChanged: (index) {
                             for (var controller in cubit.videoControllers) {
@@ -78,13 +80,13 @@ class _ReelsScreenState extends State<ReelsScreen> {
                       ),
                       if ((state is ReelsLoadingMore)||(cubit.videoControllers.length!=cubit.reelsList.length))...[
                         SizedBox(
-                          height: 20.h,
+                          height: 5.h,
                         ),
-                        CircularProgressIndicator(
+                        const CupertinoActivityIndicator(
                           color: Colors.white,
                         ),
                         SizedBox(
-                          height: 20.h,
+                          height: 5.h,
                         ),
                       ]
                     ],

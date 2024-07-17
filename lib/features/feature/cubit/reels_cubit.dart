@@ -9,30 +9,37 @@ part 'reels_state.dart';
 class ReelsBloc extends Cubit<ReelsState> {
   final ReelsRepository _reelsRepository;
   ReelsBloc(
-      this._reelsRepository,
-      ) : super(ReelsIdle());
+    this._reelsRepository,
+  ) : super(ReelsIdle());
 
   static ReelsBloc get(context) => BlocProvider.of<ReelsBloc>(context);
 
-  List<RealModel> reelsList = [];
+  List<ReelModel> reelsList = [];
   List<VideoPlayerController> videoControllers = [];
   PageController pageController = PageController();
 
-  int currentPage = 0;
-  final int pageSize = 4;
+  int currentPage = 1;
+  final int pageSize = 6;
 
   Future<void> getReels(int startIndex) async {
     try {
-      final NetworkService<List<RealModel>> data = await _reelsRepository.getReals(startIndex, pageSize);
-      if (data is Succeed<List<RealModel>>) {
-        reelsList.addAll(data.data); // Use addAll to append new items instead of clearing the list
+      final NetworkService<ReelsResponseModel> data =
+          await _reelsRepository.getReals(startIndex, pageSize);
+      if (data is Succeed<ReelsResponseModel>) {
+        reelsList.addAll(data.data.data ?? []);
+        var total = data.data.meta?.total!;
+        for (var item in reelsList.skip(videoControllers.length)) {
+          final controller = VideoPlayerController.networkUrl(Uri.parse(item.video ?? ''));
+          await controller.initialize();
+          videoControllers.add(controller);
+        }
         print('reelsList ${reelsList.length}');
         emit(ReelsSuccess());
-      } else if (data is Failure<List<RealModel>>) {
+      } else if (data is Failure<ReelsResponseModel>) {
         emit(ReelsError(networkExceptions: data.networkExceptions));
       }
     } catch (e) {
-      // emit(ReelsError(networkExceptions: ));
+      print("Error listener $e");
     }
   }
 
@@ -41,8 +48,9 @@ class ReelsBloc extends Cubit<ReelsState> {
     currentPage++;
     await getReels(currentPage);
 
-    for (var item in reelsList.skip(videoControllers.length)) { // Process only new videos
-      final controller = VideoPlayerController.networkUrl(Uri.parse(item.video ?? ''));
+    for (var item in reelsList.skip(videoControllers.length)) {
+      final controller =
+          VideoPlayerController.networkUrl(Uri.parse(item.video ?? ''));
       await controller.initialize();
       videoControllers.add(controller);
     }

@@ -16,6 +16,6 @@ class ReelsDataSource {
         'per_page': perPage,
       }
     );
-    return response.data['data'];
+    return response.data;
   }
 }
